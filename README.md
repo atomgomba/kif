@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/atomgomba/kif.svg)](https://jitpack.io/#atomgomba/kif)
+
 # kif logger
 
 kif is like log, but to the left by one. kif has features which even the simplest logging facilities need to have - because let's admit it, kif is really simple. It can be seen as a direct replacement for `println` in Kotlin projects targeting the JVM and/or native platforms. It was designed mainly with the intent to print formatted messages to stdout with a timestamp and have more control over the output.
@@ -34,7 +36,7 @@ repositories {
 
 2. Add the dependency
 ```kotlin
-implementation("com.github.atomgomba:kif:0.1.0")
+implementation("com.github.atomgomba.kif:kif:0.1.0")
 ```
 
 ## User guide
