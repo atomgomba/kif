@@ -155,7 +155,7 @@ class Kif private constructor(
         internal fun out(producer: () -> String) = out(Kif, producer)
 
         internal fun out(kif: KifApi, producer: () -> String) {
-            if (kif.level != Off && kif.level <= this) {
+            if (kif.level.isNotOff && kif.level <= this) {
                 kif.output.print(kif.formatter.format(this, producer()))
             }
         }

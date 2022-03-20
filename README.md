@@ -2,7 +2,7 @@
 
 # kif - println on steroids
 
-kif is like log, but to the left by one. kif has features which even the simplest logging facilities need to have - because let's admit it, kif is really simple. It can be seen as a direct replacement for `println` in Kotlin projects targeting the JVM and/or native platforms. It was designed mainly with the intent to print formatted messages to stdout with a timestamp and have more control over the output.
+kif is like log, but to the left by one. It can be seen as a direct replacement for `println` in Kotlin projects targeting the JVM and/or native platforms. It was designed mainly with the intent to print formatted messages to stdout with a timestamp and have more control over the output. kif has features which even the simplest logging facilities need to have - because let's admit it, kif is really simple.
 
 ## Notable features
 
@@ -19,10 +19,10 @@ kif is like log, but to the left by one. kif has features which even the simples
 ## Example usage
 
 ```kotlin
-import kif.kifi
+import kif.kif
 
 fun main() {
-    kifi("Hello world!")
+    kif("Hello world!")
 }
 ```
 
@@ -60,23 +60,23 @@ For a description of default formatting and default output handling, please see 
 ```kotlin
 // These will be printed as-is:
 
-kif("Will not do anything bad ever again.")
-kif { "Will not do anything bad ever again." }
+kif("I will not do anything bad ever again.")
+kif { "I will not do anything bad ever again." }
 
 val log = kif.new()
-log("Will not do anything bad ever again.")
-log { "Will not do anything bad ever again." }
+log("I will not do anything bad ever again.")
+log { "I will not do anything bad ever again." }
 
 // These messages will be formatted:
 
-kifi("Will not do anything bad ever again.")
-kifi { "Will not do anything bad ever again." }
-kif.i("Will not do anything bad ever again.")
-kif.i { "Will not do anything bad ever again." }
+kifi("I will not do anything bad ever again.")
+kifi { "I will not do anything bad ever again." }
+kif.i("I will not do anything bad ever again.")
+kif.i { "I will not do anything bad ever again." }
 
 val log = kif.new()
-log.i("Will not do anything bad ever again.")
-log.i { "Will not do anything bad ever again." }
+log.i("I will not do anything bad ever again.")
+log.i { "I will not do anything bad ever again." }
 
 ```
 
@@ -140,7 +140,7 @@ val chatty = kif.copy(formatter = ChatterBoxLineFormatter())
 
 ### Message producers
 
-Every logging method can be passed a lambda which returns a `String` instead of a simple `String`. The advantage of this is that you can use the lambda to build a more complex message and at the same time invoke it lazily only when the specified logging level allows. For example:
+Every logging method can be passed a lambda which returns a `String` instead of a simple `String` argument. The advantage of this is that you can use the lambda to build a more complex message and at the same time invoke it lazily only when the specified logging level condition is met. For example:
 
 ```kotlin
 kif.level = Level.Error
@@ -172,7 +172,7 @@ The level-bound output methods are all infix, so you can spare some keystrokes b
 
 As you may have noticed, setting `Kif::quiet` to `true` is almost the same as setting `Kif::level` to `Off`, but there's a difference: when using the `Kif::quiet` property, kif will keep track of the last "non-Off" level value and restore it when eventually the property is set back to `false` again.
 
-The characters in the _Tag_ column are used by the default message formatter implementation to indicate the level more concisely. You can get this short version by calling `Level::tag`. Please refrain from calling this method on `Off` as that's an exception!
+The characters in the _Tag_ column are used by the default message formatter implementation to indicate the level more concisely. You can get this short version by calling `Kif.Level::tag`. Please refrain from calling this method on `Off` as that's an exception!
 
 #### Examples
 
