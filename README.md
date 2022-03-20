@@ -46,7 +46,7 @@ dependencies {
 
 ## User guide
 
-kif can be used either as a global static or as an instance. Regardless of how its being used, the message formatting policy is the same: 
+kif can be used either as a global static or as an instance. Regardless of how it's being used, the message formatting policy is the same: 
 
 * Calling the object directly will print the message as-is using the current output handler
 * Calling a logging method with an associated level (eg. `Kif::d`, `Kif::e`, etc.) will also run the message through the formatting handler before passing it to the output handler
