@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.ekezet"
-version = "0.1.0"
+version = "0.1.1"
 
 repositories {
     mavenCentral()
@@ -78,8 +78,8 @@ publishing {
             }
             licenses {
                 license {
-                    name.set("GNU General Public License version 3")
-                    url.set("https://opensource.org/licenses/GPL-3.0")
+                    name.set("Apache License 2.0")
+                    url.set("https://opensource.org/licenses/apache-2.0")
                 }
             }
             scm {
