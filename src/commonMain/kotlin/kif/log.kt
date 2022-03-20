@@ -18,7 +18,8 @@ interface KifApi {
     var formatter: LineFormatter
     var output: LineOutput
 
-    operator fun invoke(text: String)
+    operator fun invoke(text: String) = invoke { text }
+    operator fun invoke(producer: () -> String)
 
     fun new(
         level: Level = Level.Default,
@@ -26,12 +27,18 @@ interface KifApi {
         output: LineOutput = LineOutput.Default,
     ): Kif
 
-    infix fun t(text: String)
-    infix fun d(text: String)
-    infix fun i(text: String)
-    infix fun w(text: String)
-    infix fun e(text: String)
-    infix fun wtf(text: String)
+    infix fun t(producer: () -> String)
+    infix fun t(text: String) = t { text }
+    infix fun d(producer: () -> String)
+    infix fun d(text: String) = d { text }
+    infix fun i(producer: () -> String)
+    infix fun i(text: String) = i { text }
+    infix fun w(producer: () -> String)
+    infix fun w(text: String) = w { text }
+    infix fun e(producer: () -> String)
+    infix fun e(text: String) = e { text }
+    infix fun wtf(producer: () -> String)
+    infix fun wtf(text: String) = wtf { text }
 }
 
 class Kif private constructor(
@@ -52,7 +59,11 @@ class Kif private constructor(
             }
         }
 
-    override operator fun invoke(text: String) = output.print(text)
+    override operator fun invoke(producer: () -> String) {
+        if (level.isNotOff) {
+            output.print(producer())
+        }
+    }
 
     override fun new(
         level: Level,
@@ -70,12 +81,12 @@ class Kif private constructor(
         output ?: this.output
     )
 
-    override infix fun t(text: String) = Trace.out(this, text)
-    override infix fun d(text: String) = Debug.out(this, text)
-    override infix fun i(text: String) = Info.out(this, text)
-    override infix fun w(text: String) = Warn.out(this, text)
-    override infix fun e(text: String) = Error.out(this, text)
-    override infix fun wtf(text: String) = WTF.out(this, text)
+    override infix fun t(producer: () -> String) = Trace.out(this, producer)
+    override infix fun d(producer: () -> String) = Debug.out(this, producer)
+    override infix fun i(producer: () -> String) = Info.out(this, producer)
+    override infix fun w(producer: () -> String) = Warn.out(this, producer)
+    override infix fun e(producer: () -> String) = Error.out(this, producer)
+    override infix fun wtf(producer: () -> String) = WTF.out(this, producer)
 
     @ThreadLocal
     companion object : KifApi {
@@ -97,7 +108,11 @@ class Kif private constructor(
         override var formatter: LineFormatter = LineFormatter.Default
         override var output: LineOutput = LineOutput.Default
 
-        override operator fun invoke(text: String) = output.print(text)
+        override operator fun invoke(producer: () -> String) {
+            if (level.isNotOff) {
+                output.print(producer())
+            }
+        }
 
         override fun new(
             level: Level,
@@ -105,12 +120,12 @@ class Kif private constructor(
             output: LineOutput,
         ): Kif = Kif(level, formatter, output)
 
-        override infix fun t(text: String) = Trace.out(text)
-        override infix fun d(text: String) = Debug.out(text)
-        override infix fun i(text: String) = Info.out(text)
-        override infix fun w(text: String) = Warn.out(text)
-        override infix fun e(text: String) = Error.out(text)
-        override infix fun wtf(text: String) = WTF.out(text)
+        override infix fun t(producer: () -> String) = Trace.out(producer)
+        override infix fun d(producer: () -> String) = Debug.out(producer)
+        override infix fun i(producer: () -> String) = Info.out(producer)
+        override infix fun w(producer: () -> String) = Warn.out(producer)
+        override infix fun e(producer: () -> String) = Error.out(producer)
+        override infix fun wtf(producer: () -> String) = WTF.out(producer)
     }
 
     enum class Level {
@@ -137,11 +152,11 @@ class Kif private constructor(
                 Off -> error("Ooops, I've failed to remain silent!")
             }
 
-        internal fun out(text: String) = out(Kif, text)
+        internal fun out(producer: () -> String) = out(Kif, producer)
 
-        internal fun out(kif: KifApi, text: String) {
-            if (kif.level != Off && this <= kif.level) {
-                kif.output.print(kif.formatter.format(this, text))
+        internal fun out(kif: KifApi, producer: () -> String) {
+            if (kif.level != Off && kif.level <= this) {
+                kif.output.print(kif.formatter.format(this, producer()))
             }
         }
 
@@ -181,8 +196,29 @@ inline val <reified T : Any> T.kif
     }
 
 inline fun <reified T : Any> T.kift(text: String) = Kif.t("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kift(crossinline producer: () -> String) =
+    Kif.t { "${T::class.simpleName}: " + producer() }
+
 inline fun <reified T : Any> T.kifd(text: String) = Kif.d("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifd(crossinline producer: () -> String) =
+    Kif.d { "${T::class.simpleName}: " + producer() }
+
 inline fun <reified T : Any> T.kifi(text: String) = Kif.i("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifi(crossinline producer: () -> String) =
+    Kif.i { "${T::class.simpleName}: " + producer() }
+
 inline fun <reified T : Any> T.kifw(text: String) = Kif.w("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifw(crossinline producer: () -> String) =
+    Kif.w { "${T::class.simpleName}: " + producer() }
+
 inline fun <reified T : Any> T.kife(text: String) = Kif.e("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kife(crossinline producer: () -> String) =
+    Kif.e { "${T::class.simpleName}: " + producer() }
+
+inline fun <reified T : Any> T.kifwtf(text: String) = Kif.wtf("${T::class.simpleName}: $text")
 inline fun <reified T : Any> T.kiff(text: String) = Kif.wtf("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifwtf(crossinline producer: () -> String) =
+    Kif.wtf { "${T::class.simpleName}: " + producer() }
+
+inline fun <reified T : Any> T.kiff(crossinline producer: () -> String) =
+    Kif.wtf { "${T::class.simpleName}: " + producer() }

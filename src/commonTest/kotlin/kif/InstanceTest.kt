@@ -29,6 +29,18 @@ internal class InstanceTest {
     }
 
     @Test
+    fun simpleProducedOutputNotFormatted() {
+        // given
+        val kif = kif.new(output = output)
+
+        // when
+        kif { testText }
+
+        // then
+        assertEquals(testText, output.expected)
+    }
+
+    @Test
     fun simpleOutputNotDelegatedWhenQuiet() {
         // given
         val kif = kif.new(output = output)
@@ -39,6 +51,60 @@ internal class InstanceTest {
 
         // then
         assertFalse(output.isInitialized)
+    }
+
+    @Test
+    fun simpleProducerLambdaNotInvokedWhenQuiet() {
+        // given
+        val kif = kif.new(output = output)
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
+    }
+
+    @Test
+    fun formattedProducerLambdaNotInvokedWhenQuiet() {
+        // given
+        val kif = kif.new(output = output)
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif.w {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
+    }
+
+    @Test
+    fun formattedProducerLambdaNotInvokedWhenLevelIsLower() {
+        // given
+        val kif = kif.new(output = output)
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif.d {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
     }
 
     @Test
@@ -101,6 +167,21 @@ internal class InstanceTest {
     }
 
     @Test
+    fun debugProducedOutputNotDelegatedWhenErrorLevelSet() {
+        // given
+        val kif = kif.new(
+            output = output,
+            level = Level.Error,
+        )
+
+        // when
+        kif d { testText }
+
+        // then
+        assertFalse(output.isInitialized)
+    }
+
+    @Test
     fun customFormatterOmittedWithoutLevel() {
         // given
         val kif = kif.new(
@@ -132,7 +213,7 @@ internal class InstanceTest {
     }
 
     // 8<-
-    // Instance-specific tests start here
+    // Instance-only tests start here
     // ---
 
     @Test

@@ -31,6 +31,15 @@ internal class StaticTest {
     }
 
     @Test
+    fun simpleProducedOutputNotFormatted() {
+        // when
+        kif { testText }
+
+        // then
+        assertEquals(testText, output.expected)
+    }
+
+    @Test
     fun simpleOutputNotDelegatedWhenQuiet() {
         // given
         kif.quiet = true
@@ -40,6 +49,69 @@ internal class StaticTest {
 
         // then
         assertFalse(output.isInitialized)
+    }
+
+    @Test
+    fun simpleProducedOutputNotDelegatedWhenQuiet() {
+        // given
+        kif.quiet = true
+
+        // when
+        kif { testText }
+
+        // then
+        assertFalse(output.isInitialized)
+    }
+
+    @Test
+    fun simpleProducerLambdaNotInvokedWhenQuiet() {
+        // given
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
+    }
+
+    @Test
+    fun formattedProducerLambdaNotInvokedWhenQuiet() {
+        // given
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif.w {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
+    }
+
+    @Test
+    fun formattedProducerLambdaNotInvokedWhenLevelIsLower() {
+        // given
+        var invoked = false
+        kif.quiet = true
+
+        // when
+        kif.d {
+            invoked = true
+            testText
+        }
+
+        // then
+        assertFalse(output.isInitialized)
+        assertFalse(invoked)
     }
 
     @Test
@@ -96,6 +168,18 @@ internal class StaticTest {
     }
 
     @Test
+    fun debugProducedOutputNotDelegatedWhenErrorLevelSet() {
+        // given
+        kif.level = Level.Error
+
+        // when
+        kif d { testText }
+
+        // then
+        assertFalse(output.isInitialized)
+    }
+
+    @Test
     fun customFormatterOmittedWithoutLevel() {
         // given
         kif.formatter = TestLineFormatter()
@@ -121,7 +205,7 @@ internal class StaticTest {
     }
 
     // 8<-
-    // Static-specific tests start here
+    // Static-only tests start here
     // ---
 
     @Test
@@ -129,9 +213,24 @@ internal class StaticTest {
         // given
         val formatter = TestLineFormatter()
         kif.formatter = formatter
+        kif.level = Level.Trace
 
         // when
         kift(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunTraceProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.Trace
+
+        // when
+        kift { testText }
 
         // then
         assertEquals(formatter.expected, output.expected)
@@ -142,9 +241,24 @@ internal class StaticTest {
         // given
         val formatter = TestLineFormatter()
         kif.formatter = formatter
+        kif.level = Level.Debug
 
         // when
         kifd(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunDebugProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.Debug
+
+        // when
+        kifd { testText }
 
         // then
         assertEquals(formatter.expected, output.expected)
@@ -155,9 +269,24 @@ internal class StaticTest {
         // given
         val formatter = TestLineFormatter()
         kif.formatter = formatter
+        kif.level = Level.Info
 
         // when
         kifi(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunInfoProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.Info
+
+        // when
+        kifi { testText }
 
         // then
         assertEquals(formatter.expected, output.expected)
@@ -171,6 +300,19 @@ internal class StaticTest {
 
         // when
         kifw(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunWarnProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+
+        // when
+        kifw { testText }
 
         // then
         assertEquals(formatter.expected, output.expected)
@@ -191,6 +333,34 @@ internal class StaticTest {
     }
 
     @Test
+    fun shortcutFunErrorProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.Error
+
+        // when
+        kife { testText }
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunFailureDelegatesToObject2() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.WTF
+
+        // when
+        kifwtf(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
     fun shortcutFunFailureDelegatesToObject() {
         // given
         val formatter = TestLineFormatter()
@@ -199,6 +369,34 @@ internal class StaticTest {
 
         // when
         kiff(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunFailureProducerDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.WTF
+
+        // when
+        kifwtf { testText }
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunFailureProducerDelegatesToObject2() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.WTF
+
+        // when
+        kiff { testText }
 
         // then
         assertEquals(formatter.expected, output.expected)

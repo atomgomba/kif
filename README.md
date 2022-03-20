@@ -1,6 +1,6 @@
 [![](https://jitpack.io/v/atomgomba/kif.svg)](https://jitpack.io/#atomgomba/kif)
 
-# kif logger
+# kif - println on steroids
 
 kif is like log, but to the left by one. kif has features which even the simplest logging facilities need to have - because let's admit it, kif is really simple. It can be seen as a direct replacement for `println` in Kotlin projects targeting the JVM and/or native platforms. It was designed mainly with the intent to print formatted messages to stdout with a timestamp and have more control over the output.
 
@@ -40,7 +40,7 @@ repositories {
 2. Add the dependency
 ```kotlin
 dependencies {
-    implementation("com.github.atomgomba.kif:kif:0.1.1")
+    implementation("com.github.atomgomba.kif:kif:0.1.2")
 }
 ```
 
@@ -54,6 +54,31 @@ kif can be used either as a global static or as an instance. Regardless of how i
 The reason for this behavior is to let kif serve as a direct replacement for `println`. 
 
 For a description of default formatting and default output handling, please see the rest of this document.
+
+### Examples
+
+```kotlin
+// These will be printed as-is:
+
+kif("Will not do anything bad ever again.")
+kif { "Will not do anything bad ever again." }
+
+val log = kif.new()
+log("Will not do anything bad ever again.")
+log { "Will not do anything bad ever again." }
+
+// These messages will be formatted:
+
+kifi("Will not do anything bad ever again.")
+kifi { "Will not do anything bad ever again." }
+kif.i("Will not do anything bad ever again.")
+kif.i { "Will not do anything bad ever again." }
+
+val log = kif.new()
+log.i("Will not do anything bad ever again.")
+log.i { "Will not do anything bad ever again." }
+
+```
 
 ### Use as a global static
 
@@ -82,7 +107,7 @@ class Room {
 }
 ```
 
-The forms of e.g. `kif.w` and `kifw` can be used interchangeably when used as static.
+The forms of e.g. `kif.w` and `kifw` can be used interchangeably when used as static. For brevity the shortcut for level `WTF` can be written as `kiff` instead of `kifwtf`.
 
 ### Use as an instance
 
@@ -111,6 +136,18 @@ A kif instance can be copied just like a Kotlin data class with the `Kif::copy` 
 ```kotlin
 val kif = kif.new()
 val chatty = kif.copy(formatter = ChatterBoxLineFormatter())
+```
+
+### Message producers
+
+Every logging method can be passed a lambda which returns a `String` instead of a simple `String`. The advantage of this is that you can use the lambda to build a more complex message and at the same time invoke it lazily only when the specified logging level allows. For example:
+
+```kotlin
+kif.level = Level.Error
+kif.w { 
+    // ...relatively costly operation to build a message...
+    // but will never be invoked because of the current logging level
+}
 ```
 
 ### Levels & methods
@@ -193,6 +230,11 @@ Custom output handlers can also be set either via the `Kif::output` property or 
 The default output handler, as implemented by `Kif.LineOutput.Default`, simply delegates its string argument to `println`. Since this implementation is admittedly very naive, you will need to implement your own output handler should you need more fancy stuff, say buffering or writing to disk and so forth.
 
 ## Changes
+
+### 0.1.2
+
+* Added the ability to pass the log message as a producer lambda
+* Fixed stupid bug related to level testing
 
 ### 0.1.1
 
