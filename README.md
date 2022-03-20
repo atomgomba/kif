@@ -7,7 +7,10 @@ kif is like log, but to the left by one. kif has features which even the simples
 ## Notable features
 
 * Minimalistic design for simple usecases
-* Easy to use, no need for initialization or configuration
+* Easy to use
+  * No need for initialization or configuration
+  * Less typing
+  * Quicker auto-import (not many things are called kif)
 * Works on both native and the JVM
   * Zero dependency on the JVM
   * Single dependency on native (`kotlinx-datetime`)
@@ -16,10 +19,10 @@ kif is like log, but to the left by one. kif has features which even the simples
 ## Example usage
 
 ```kotlin
-import kif.kif
+import kif.kifi
 
 fun main() {
-    kif d "Hello world!"
+    kifi("Hello world!")
 }
 ```
 
@@ -36,7 +39,9 @@ repositories {
 
 2. Add the dependency
 ```kotlin
-implementation("com.github.atomgomba.kif:kif:0.1.0")
+dependencies {
+    implementation("com.github.atomgomba.kif:kif:0.1.1")
+}
 ```
 
 ## User guide
@@ -69,7 +74,7 @@ If you're using a level-bound method to log a message from inside a class, the s
 ```kotlin
 class Room {
     fun callMe() {
-        kif i "I was called"
+        kif.i("I was called")
         
         // Would print something like:
         // "I/17:19:39.432708 Room: I was called"
@@ -77,9 +82,11 @@ class Room {
 }
 ```
 
+The forms of e.g. `kif.w` and `kifw` can be used interchangeably when used as static.
+
 ### Use as an instance
 
-Other usecases may require creating instances of kif, for instance when you chose to pick different logging levels for different software components and would like to avoid the hassle of keeping track of state. `Kif::new` factory method can be used to create instances and initially set the desired level, formatter and output handler.
+Other usecases may require creating instances of kif, for instance when you chose to pick different formatters for different software components and would like to avoid the hassle of keeping track of state. `Kif::new` factory method can be used to create instances and initially set the desired level, formatter and output handler.
 
 One important difference between static and non-static usage is that in the non-static manner the simple name of the enclosing class cannot be prepended to the message, hence you have to include the source of the message yourself, should you want to do so.
 
@@ -91,7 +98,7 @@ class Room {
     private val kif = kif.new() 
         
     fun callMe() {
-        kif i "$tag: I was called"
+        kif.i("$tag: I was called")
 
         // Would print something like:
         // "I/17:19:39.432708 Room: I was called"
@@ -135,16 +142,16 @@ The characters in the _Tag_ column are used by the default message formatter imp
 Static:
 
 ```kotlin
-kif.level = Level.Warn
-kif d "You will never see me unless level is set to Debug or lower"
+kif.level = Level.Info
+kifd("You will never see me unless level is set to Debug or lower")
 ```
 
 Non-static:
 
 ```kotlin
-val kif = kif.new(level = Level.Warn)
-// or `kif.level = Level.Warn` after instantiation
-kif d "You will never see me unless level is set to Debug or lower"
+val kif = kif.new(level = Level.Info)
+// or `kif.level = Level.Info` after instantiation
+kif.d("You will never see me unless level is set to Debug or lower")
 ```
 
 ### Formatters
@@ -157,11 +164,15 @@ fun format(level: Level, text: String): String
 
 Please note that the `level` argument is only there to provide extra context, filtering of the messages is done at a higher level.
 
-In order to use your custom formatter you need to set it as the value of the `Kif::formatter` property or the `formatter` argument of `Kif::new`. Note that since `Kif.LineFormatter` is a functional interface, you can use the [lambda syntax](https://kotlinlang.org/docs/fun-interfaces.html#sam-conversions) to define a formatter.
+In order to use your custom formatter you need to set it as the value of the `Kif::formatter` property or the `formatter` argument of `Kif::new`. Note that since `Kif.LineFormatter` is a functional interface, you can use the [lambda syntax](https://kotlinlang.org/docs/fun-interfaces.html#sam-conversions) to define a formatter. This makes it easy to define a formatter in-place. For example:
+
+```kotlin
+kif.formatter = LineFormatter { _, text -> "Let's say, $text" }
+```
 
 The default formatting as implemented by `Kif.LineFormatter.Default` is:
 
-    $level/$timestamp $message
+    ${level.tag}/$timestamp $message
 
 So the default formatting is similar to the following:
 
@@ -183,10 +194,15 @@ The default output handler, as implemented by `Kif.LineOutput.Default`, simply d
 
 ## Changes
 
+### 0.1.1
+
+* Added alternative static functions (e.g. `kifi` is now a shorter alternative to `kif.i`)
+* Changed license from GPLv3 to Apache 2.0 to be more permissive
+
 ### 0.1.0
 
 * Initial release
 
 ## License
 
-kif is released under the GNU GPLv3 License.
+kif is released under the Apache 2.0 License.
