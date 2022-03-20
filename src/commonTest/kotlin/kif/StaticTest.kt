@@ -120,6 +120,90 @@ internal class StaticTest {
         assertEquals(formatter.expected, output.expected)
     }
 
+    // 8<-
+    // Static-specific tests start here
+    // ---
+
+    @Test
+    fun shortcutFunTraceDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+
+        // when
+        kift(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunDebugDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+
+        // when
+        kifd(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunInfoDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+
+        // when
+        kifi(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunWarnDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+
+        // when
+        kifw(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunErrorDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.Error
+
+        // when
+        kife(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
+    @Test
+    fun shortcutFunFailureDelegatesToObject() {
+        // given
+        val formatter = TestLineFormatter()
+        kif.formatter = formatter
+        kif.level = Level.WTF
+
+        // when
+        kiff(testText)
+
+        // then
+        assertEquals(formatter.expected, output.expected)
+    }
+
     companion object {
         private const val testText = "This is only a test"
     }

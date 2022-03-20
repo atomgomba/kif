@@ -197,3 +197,10 @@ inline val <reified T : Any> T.kif
         override infix fun e(text: String) = Kif.e("${T::class.simpleName}: $text")
         override infix fun wtf(text: String) = Kif.wtf("${T::class.simpleName}: $text")
     }
+
+inline fun <reified T : Any> T.kift(text: String) = Kif.t("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifd(text: String) = Kif.d("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifi(text: String) = Kif.i("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kifw(text: String) = Kif.w("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kife(text: String) = Kif.e("${T::class.simpleName}: $text")
+inline fun <reified T : Any> T.kiff(text: String) = Kif.wtf("${T::class.simpleName}: $text")
