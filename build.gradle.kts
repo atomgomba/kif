@@ -21,6 +21,13 @@ kotlin {
             useJUnitPlatform()
         }
     }
+
+    targets.all {
+        compilations.all {
+            kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        }
+    }
+
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
