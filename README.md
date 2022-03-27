@@ -168,8 +168,6 @@ The following levels and methods are available in ascending order:
 
 **Note:** WTF stands for What a Terrible Failure
 
-The level-bound output methods are all infix, so you can spare some keystrokes by not having to include the parenthesis.
-
 As you may have noticed, setting `Kif::quiet` to `true` is almost the same as setting `Kif::level` to `Off`, but there's a difference: when using the `Kif::quiet` property, kif will keep track of the last "non-Off" level value and restore it when eventually the property is set back to `false` again.
 
 The characters in the _Tag_ column are used by the default message formatter implementation to indicate the level more concisely. You can get this short version by calling `Kif.Level::tag`. Please refrain from calling this method on `Off` as that's an exception!
@@ -189,6 +187,31 @@ Non-static:
 val kif = kif.new(level = Level.Info)
 // or `kif.level = Level.Info` after instantiation
 kif.d("You will never see me unless level is set to Debug or lower")
+```
+
+### Printing stack traces
+
+Methods that indicate misbehavior (`Kif::w`, `Kif::e` and `Kif::wtf`) can be given a `Throwable` as first argument in which case the stack trace will be appended to the message text using [`stackTraceToString`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/stack-trace-to-string.html).
+
+Including stack trace with the message:
+
+```kotlin
+class Room {
+  fun callMe() {
+    try {
+      // ...this may fail, but at least I tried...
+    } catch (e: RuntimeException) {
+      kifw(e) { "Ooops: ${e.localizedMessage}" }
+
+      // Would print something like:
+      // W/20:33:12.942285 Room: Ooops: null: java.lang.RuntimeException
+      // 	at ...
+      // 	at ...
+      // 	at ...
+      // ...
+    }
+  }
+}
 ```
 
 ### Formatters
@@ -230,6 +253,10 @@ Custom output handlers can also be set either via the `Kif::output` property or 
 The default output handler, as implemented by `Kif.LineOutput.Default`, simply delegates its string argument to `println`. Since this implementation is admittedly very naive, you will need to implement your own output handler should you need more fancy stuff, say buffering or writing to disk and so forth.
 
 ## Changes
+
+### 1.0.0
+
+* Added option to include stack traces with the printed message
 
 ### 0.1.2
 
