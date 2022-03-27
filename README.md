@@ -40,7 +40,7 @@ repositories {
 2. Add the dependency
 ```kotlin
 dependencies {
-    implementation("com.github.atomgomba.kif:kif:1.0.0")
+    implementation("com.github.atomgomba.kif:kif:1.1.0")
 }
 ```
 
@@ -243,8 +243,10 @@ So the default formatting is similar to the following:
 How the generated  output is handled can be customized as well. Output handlers in kif implement the `Kif.LineOutput` functional interface whose method has the following quite straightforward signature:
 
 ```kotlin
-fun print(text: String)
+fun print(level: Level, text: String)
 ```
+
+Please note that the `level` argument is only there to provide extra context, filtering of the messages is done at a higher level.
 
 Implementing an output handler is the appropriate way to redirect log messages to the desired output, e.g. to a web service, fax it to somebody or whatever. kif does not support the use of multiple output handlers out of the box, but you could always turn to [composition](https://en.wikipedia.org/wiki/Object_composition) and a few lines of code to achieve this - or - switch to a more complicated logging tool.
 
@@ -253,6 +255,10 @@ Custom output handlers can also be set either via the `Kif::output` property or 
 The default output handler, as implemented by `Kif.LineOutput.Default`, simply delegates its string argument to `println`. Since this implementation is admittedly very naive, you will need to implement your own output handler should you need more fancy stuff, say buffering or writing to disk and so forth.
 
 ## Changes
+
+### 1.1.0
+
+* Output handler also receives the current level
 
 ### 1.0.0
 
