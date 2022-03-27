@@ -40,7 +40,7 @@ repositories {
 2. Add the dependency
 ```kotlin
 dependencies {
-    implementation("com.github.atomgomba.kif:kif:0.1.2")
+    implementation("com.github.atomgomba.kif:kif:1.0.0")
 }
 ```
 
