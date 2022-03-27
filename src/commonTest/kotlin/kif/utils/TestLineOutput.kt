@@ -1,5 +1,6 @@
 package kif.utils
 
+import kif.Kif.Level
 import kif.Kif.LineOutput
 
 class TestLineOutput : LineOutput {
@@ -7,7 +8,7 @@ class TestLineOutput : LineOutput {
 
     val isInvoked get() = ::expected.isInitialized
 
-    override fun print(text: String) {
+    override fun print(level: Level, text: String) {
         expected = text
     }
 }

@@ -72,7 +72,7 @@ class Kif private constructor(
 
     override operator fun invoke(producer: MessageProducer) {
         if (level.isNotOff) {
-            output.print(producer())
+            output.print(level, producer())
         }
     }
 
@@ -130,7 +130,7 @@ class Kif private constructor(
 
         override operator fun invoke(producer: MessageProducer) {
             if (level.isNotOff) {
-                output.print(producer())
+                output.print(level, producer())
             }
         }
 
@@ -187,7 +187,7 @@ class Kif private constructor(
 
         internal fun out(kif: KifApi, producer: MessageProducer) {
             if (kif.level.isNotOff && kif.level <= this) {
-                kif.output.print(kif.formatter.format(this, producer()))
+                kif.output.print(this, kif.formatter.format(this, producer()))
             }
         }
 
@@ -214,10 +214,10 @@ class Kif private constructor(
     }
 
     fun interface LineOutput {
-        fun print(text: String)
+        fun print(level: Level, text: String)
 
         object Default : LineOutput {
-            override fun print(text: String) = println(text)
+            override fun print(level: Level, text: String) = println(text)
         }
     }
 }
