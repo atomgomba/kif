@@ -8,6 +8,7 @@ import kif.utils.TestLineFormatter
 import kif.utils.makeDefaultFormatterTestPattern
 import kif.utils.testMessage
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 abstract class StaticLevelBoundExtensionTest : LevelBoundTest() {
@@ -49,7 +50,8 @@ abstract class StaticLevelBoundExtensionTest : LevelBoundTest() {
     @Test
     fun shortcutSimpleMessageIsFormattedAndEnclosingClassPrepended() {
         // given
-        val endsWithExpected = "${this::class.simpleName}: $testMessage"
+        val className = this::class.simpleName!!
+        val endsWithExpected = "$className: $testMessage"
 
         // when
         subjectShortcutSimpleMethod(testMessage)
@@ -59,12 +61,14 @@ abstract class StaticLevelBoundExtensionTest : LevelBoundTest() {
             "Message must end with expected suffix")
         assertTrue(output.expected.contains(TestLineFormatter.Prefix),
             "Message must have expected prefix")
+        assertEquals(2, output.expected.split(className).size, "Class name must be included once")
     }
 
     @Test
     fun shortcutProducedMessageIsFormattedAndEnclosingClassPrepended() {
         // given
-        val endsWithExpected = "${this::class.simpleName}: $testMessage"
+        val className = this::class.simpleName!!
+        val endsWithExpected = "$className: $testMessage"
 
         // when
         subjectShortcutProducerMethod { testMessage }
@@ -74,6 +78,7 @@ abstract class StaticLevelBoundExtensionTest : LevelBoundTest() {
             "Message must end with expected suffix")
         assertTrue(output.expected.contains(TestLineFormatter.Prefix),
             "Message must have expected prefix")
+        assertEquals(2, output.expected.split(className).size, "Class name must be included once")
     }
 
 

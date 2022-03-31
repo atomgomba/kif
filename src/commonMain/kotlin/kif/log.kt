@@ -268,62 +268,62 @@ inline val <reified T : Any> T.kif
         }
     }
 
-inline fun <reified T : Any> T.kift(text: String) = kif.t("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kift(crossinline producer: MessageProducer) =
-    kif.t { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kift(text: String) = kif.t(text)
+inline fun <reified T : Any> T.kift(noinline producer: MessageProducer) =
+    kif.t(producer)
 
-inline fun <reified T : Any> T.kifd(text: String) = kif.d("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kifd(crossinline producer: MessageProducer) =
-    kif.d { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifd(text: String) = kif.d(text)
+inline fun <reified T : Any> T.kifd(noinline producer: MessageProducer) =
+    kif.d(producer)
 
-inline fun <reified T : Any> T.kifi(text: String) = kif.i("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kifi(crossinline producer: MessageProducer) =
-    kif.i { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifi(text: String) = kif.i(text)
+inline fun <reified T : Any> T.kifi(noinline producer: MessageProducer) =
+    kif.i(producer)
 
-inline fun <reified T : Any> T.kifw(text: String) = kif.w("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kifw(crossinline producer: MessageProducer) =
-    kif.w { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifw(text: String) = kif.w(text)
+inline fun <reified T : Any> T.kifw(noinline producer: MessageProducer) =
+    kif.w(producer)
 
 inline fun <reified T : Any> T.kifw(t: Throwable, text: String) =
-    kif.w(t) { "${T::class.simpleName}: $text" }
+    kif.w(t) { text }
 
-inline fun <reified T : Any> T.kifw(t: Throwable, crossinline producer: MessageProducer) =
-    kif.w(t) { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifw(t: Throwable, noinline producer: MessageProducer) =
+    kif.w(t, producer)
 
-inline fun <reified T : Any> T.kifw(t: Throwable) = kif.w(t, "${T::class.simpleName}")
+inline fun <reified T : Any> T.kifw(t: Throwable) = kif.w(t)
 
-inline fun <reified T : Any> T.kife(text: String) = kif.e("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kife(crossinline producer: MessageProducer) =
-    kif.e { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kife(text: String) = kif.e(text)
+inline fun <reified T : Any> T.kife(noinline producer: MessageProducer) =
+    kif.e(producer)
 
-inline fun <reified T : Any> T.kife(t: Throwable, crossinline producer: MessageProducer) =
-    kif.e(t) { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kife(t: Throwable, noinline producer: MessageProducer) =
+    kif.e(t, producer)
 
 inline fun <reified T : Any> T.kife(t: Throwable, text: String) =
-    kif.e(t) { "${T::class.simpleName}: $text" }
+    kif.e(t) { text }
 
-inline fun <reified T : Any> T.kife(t: Throwable) = kif.e(t, "${T::class.simpleName}")
+inline fun <reified T : Any> T.kife(t: Throwable) = kif.e(t)
 
-inline fun <reified T : Any> T.kifwtf(text: String) = kif.wtf("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kifwtf(crossinline producer: MessageProducer) =
-    kif.wtf { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifwtf(text: String) = kif.wtf(text)
+inline fun <reified T : Any> T.kifwtf(noinline producer: MessageProducer) =
+    kif.wtf(producer)
 
-inline fun <reified T : Any> T.kifwtf(t: Throwable, crossinline producer: MessageProducer) =
-    kif.wtf(t) { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kifwtf(t: Throwable, noinline producer: MessageProducer) =
+    kif.wtf(t, producer)
 
 inline fun <reified T : Any> T.kifwtf(t: Throwable, text: String) =
-    kif.wtf(t) { "${T::class.simpleName}: $text" }
+    kif.wtf(t) { text }
 
-inline fun <reified T : Any> T.kifwtf(t: Throwable) = kif.wtf(t, "${T::class.simpleName}")
+inline fun <reified T : Any> T.kifwtf(t: Throwable) = kif.wtf(t)
 
-inline fun <reified T : Any> T.kiff(text: String) = kif.wtf("${T::class.simpleName}: $text")
-inline fun <reified T : Any> T.kiff(crossinline producer: MessageProducer) =
-    kif.wtf { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kiff(text: String) = kif.wtf(text)
+inline fun <reified T : Any> T.kiff(noinline producer: MessageProducer) =
+    kif.wtf(producer)
 
-inline fun <reified T : Any> T.kiff(t: Throwable, crossinline producer: MessageProducer) =
-    kif.wtf(t) { "${T::class.simpleName}: " + producer() }
+inline fun <reified T : Any> T.kiff(t: Throwable, noinline producer: MessageProducer) =
+    kif.wtf(t, producer)
 
 inline fun <reified T : Any> T.kiff(t: Throwable, text: String) =
-    kif.wtf(t) { "${T::class.simpleName}: $text" }
+    kif.wtf(t) { text }
 
-inline fun <reified T : Any> T.kiff(t: Throwable) = kif.wtf(t, "${T::class.simpleName}")
+inline fun <reified T : Any> T.kiff(t: Throwable) = kif.wtf(t)

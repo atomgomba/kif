@@ -8,6 +8,7 @@ import kif.utils.TestLineFormatter
 import kif.utils.makeDefaultFormatterTestPattern
 import kif.utils.testMessage
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -56,7 +57,8 @@ abstract class StaticLevelBoundWithThrowableExtensionTest : LevelBoundWithThrowa
     fun shortcutSimpleMessageWithThrowableIsFormattedAndEnclosingClassPrepended() {
         // given
         val t = RuntimeException()
-        val containsExpected = "${this::class.simpleName}: $testMessage: ${t.stackTraceToString()}"
+        val className = this::class.simpleName!!
+        val containsExpected = "$className: $testMessage: ${t.stackTraceToString()}"
 
         // when
         subjectShortcutSimpleWithThrowableMethod(t, testMessage)
@@ -66,13 +68,15 @@ abstract class StaticLevelBoundWithThrowableExtensionTest : LevelBoundWithThrowa
             "Message must contain expected substring")
         assertTrue(output.expected.contains(TestLineFormatter.Prefix),
             "Message must have expected prefix")
+        assertEquals(2, output.expected.split("$className:").size, "Class name must be included once")
     }
 
     @Test
     fun shortcutProducedMessageWithThrowableIsFormattedAndEnclosingClassPrepended() {
         // given
         val t = RuntimeException()
-        val containsExpected = "${this::class.simpleName}: $testMessage: ${t.stackTraceToString()}"
+        val className = this::class.simpleName!!
+        val containsExpected = "$className: $testMessage: ${t.stackTraceToString()}"
 
         // when
         subjectShortcutProducerWithThrowableMethod(t) { testMessage }
@@ -82,13 +86,15 @@ abstract class StaticLevelBoundWithThrowableExtensionTest : LevelBoundWithThrowa
             "Message must contain expected substring")
         assertTrue(output.expected.contains(TestLineFormatter.Prefix),
             "Message must have expected prefix")
+        assertEquals(2, output.expected.split("$className:").size, "Class name must be included once")
     }
 
     @Test
     fun shortcutWithThrowableIsFormattedAndEnclosingClassPrepended() {
         // given
         val t = RuntimeException()
-        val containsExpected = "${this::class.simpleName}: ${t.stackTraceToString()}"
+        val className = this::class.simpleName!!
+        val containsExpected = "$className: ${t.stackTraceToString()}"
 
         // when
         subjectShortcutWithThrowableMethod(t)
@@ -98,6 +104,7 @@ abstract class StaticLevelBoundWithThrowableExtensionTest : LevelBoundWithThrowa
             "Message must contain expected substring")
         assertTrue(output.expected.contains(TestLineFormatter.Prefix),
             "Message must have expected prefix")
+        assertEquals(2, output.expected.split("$className:").size, "Class name must be included once")
     }
 
     @Test
