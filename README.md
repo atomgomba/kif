@@ -40,7 +40,7 @@ repositories {
 2. Add the dependency
 ```kotlin
 dependencies {
-    implementation("com.github.atomgomba.kif:kif:1.1.0")
+    implementation("com.github.atomgomba.kif:kif:1.1.1")
 }
 ```
 
@@ -255,6 +255,10 @@ Custom output handlers can also be set either via the `Kif::output` property or 
 The default output handler, as implemented by `Kif.LineOutput.Default`, simply delegates its string argument to `println`. Since this implementation is admittedly very naive, you will need to implement your own output handler should you need more fancy stuff, say buffering or writing to disk and so forth.
 
 ## Changes
+
+### 1.1.1
+
+* Fixed duplicate class name in message when using shortcut methods
 
 ### 1.1.0
 
